@@ -69,6 +69,7 @@ a {
 }
 
 /* Header dan Navigasi */
+/* Header dan Navigasi - Fix Mobile */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -104,6 +105,7 @@ a {
     color: var(--text-dark);
     position: relative;
     transition: var(--transition);
+    padding: 0.5rem 1rem; /* Tambah padding untuk touch target lebih besar di mobile */
 }
 
 .nav-menu a::after {
@@ -130,6 +132,8 @@ a {
     flex-direction: column;
     cursor: pointer;
     gap: 4px;
+    pointer-events: auto; /* Pastikan clickable */
+    z-index: 1001; /* Lebih tinggi dari menu */
 }
 
 .hamburger span {
@@ -152,25 +156,51 @@ a {
     transform: rotate(-45deg) translate(7px, -6px);
 }
 
+/* Media Query Mobile - Fix Lengkap untuk Hamburger & Menu */
 @media (max-width: 768px) {
     .hamburger {
-        display: flex;
+        display: flex; /* Tampilkan hamburger di mobile */
     }
+    
     .nav-menu {
         position: fixed;
-        left: -100%;
-        top: 70px;
+        left: -100%; /* Sembunyikan awal di luar layar kiri */
+        top: 70px; /* Di bawah navbar */
         flex-direction: column;
         background: rgba(255, 255, 255, 0.98);
         width: 100%;
+        height: calc(100vh - 70px); /* Full height minus navbar */
         text-align: center;
-        transition: var(--transition);
+        transition: left 0.3s ease; /* Smooth slide */
         box-shadow: var(--shadow-soft);
         padding: 2rem 0;
         gap: 1.5rem;
+        z-index: 999; /* Tinggi tapi di bawah hamburger */
+        overflow-y: auto; /* Scroll jika menu panjang */
     }
+    
     .nav-menu.active {
-        left: 0;
+        left: 0; /* Slide-in saat active */
+    }
+    
+    .nav-menu a {
+        font-size: 1.2rem; /* Lebih besar untuk touch */
+        display: block;
+        padding: 1rem; /* Touch target minimal 44px (iOS guideline) */
+    }
+    
+    /* Overlay gelap saat menu open (opsional, untuk UX) */
+    body.menu-open {
+        overflow: hidden; /* Cegah scroll body saat menu open */
+    }
+    
+    /* Navbar padding lebih kecil di mobile */
+    .navbar {
+        padding: 1rem;
+    }
+    
+    .nav-brand {
+        font-size: 1.5rem;
     }
 }
 
@@ -373,3 +403,102 @@ a {
 /* Projects Section */
 .projects {
     padding: 6rem
+
+/* Tambahan untuk Efek JS - Foto Profil Glow & Bounce */
+.profile-img {
+    /* ... (kode lama tetap) */
+    filter: drop-shadow(0 0 0 rgba(16, 185, 129, 0)); /* Untuk glow effect */
+    transition: var(--transition), filter 0.3s ease; /* Tambah filter transition */
+}
+
+.profile-img.glow {
+    filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.5)); /* Glow hijau saat hover */
+    transform: scale(1.05) rotate(2deg); /* Subtle rotate + scale */
+}
+
+.profile-img.bounce-in {
+    animation: bounceIn 0.8s ease-out forwards;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) rotate(-5deg);
+    }
+    50% {
+        transform: scale(1.1) rotate(2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Efek Parallax Hero */
+.hero {
+    /* ... (kode lama tetap) */
+    will-change: transform; /* Optimize untuk parallax */
+}
+
+/* Efek Typewriter Hero */
+.hero h1 {
+    /* ... (kode lama tetap) */
+    border-right: 2px solid white; /* Cursor blinking */
+    overflow: hidden; /* Hide text untuk typewriter */
+    white-space: nowrap;
+    animation: blink 1s infinite; /* Blinking cursor */
+}
+
+@keyframes blink {
+    0%, 50% { border-color: white; }
+    51%, 100% { border-color: transparent; }
+}
+
+.hero h1.typewriter {
+    animation: typewriter 3s steps(40) forwards, blink 1s infinite;
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Efek Counter Skills (hidden awal) */
+.skill-counter {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.skill-counter.animate {
+    opacity: 1;
+}
+
+/* Efek Ripple pada Project Cards */
+.project-card {
+    /* ... (kode lama tetap) */
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.3);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Responsif untuk Efek */
+@media (max-width: 768px) {
+    .profile-img.glow {
+        transform: scale(1.02) rotate(0deg); /* Kurangi rotate di mobile */
+    }
+}
